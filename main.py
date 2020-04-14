@@ -32,12 +32,17 @@ def main_loop():
 
         draw_bbox(face_locations, face_labels, frame)
 
+        draw_visitors_data(frame)
+
         cv2.imshow('Video', frame)
 
-        # Hit 'q' on the keyboard to quit!
+        # Press Q to stop
         if cv2.waitKey(1) & 0xFF == ord('q'):
-            save_known_faces()
+            save_faces(face_locations, number_of_faces_since_save, quit=True)
             break
+
+        number_of_faces_since_save = save_faces(
+            face_locations, number_of_faces_since_save)
 
 
 if __name__ == "__main__":

@@ -13,9 +13,10 @@ def load_known_faces():
     global known_face_metadata
 
     try:
-        with open("known_faces.dat", "rb") as face_data:
+        with open("faces_file.dat", "rb") as faces_file:
+            print('cai aq')
             known_face_encodings, known_face_metadata = pickle.load(
-                face_data_file)
+                faces_file)
             print('Known faces lodaded')
     except FileNotFoundError as err:
         print('No file found, creating a new one')
@@ -100,3 +101,44 @@ def draw_bbox(face_locations, face_labels, frame):
                       (right, bottom), (0, 0, 255), cv2.FILLED)
         cv2.putText(frame, face_label, (left + 6, bottom - 6),
                     cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
+
+
+def draw_visitors_data(frame):
+    number_of_recent_visitors = 0
+
+    for metadata in known_face_metadata:
+        # If we have seen this person in the last minute, draw their image
+        if (datetime.now() - metadata['last_seen'] < timedelta(seconds=10)) and (metadata['seen_frames'] > 5):
+            # Position offset to display face image
+            x_position = number_of_recent_visitors * 150
+            frame[30:180, x_position:x_position+150] = metadata['face_image']
+            number_of_recent_visitors += 1
+
+            visits = metadata['seen_count']
+            visit_label = f"{visits} visits"
+            if visits == 1:
+                visit_label = 'First Visit'
+
+            cv2.putText(frame, visit_label, (x_position + 10, 170),
+                        cv2.FONT_HERSHEY_DUPLEX, 0.6, (255, 255, 255), 1)
+
+    if number_of_recent_visitors > 0:
+        cv2.putText(frame, "Visitors:", (5, 18),
+                    cv2.FONT_HERSHEY_DUPLEX, 0.8, (0, 0, 0), 1)
+
+
+def save_faces(face_locations, number_of_faces_since_save, quit=False):
+
+    if((len(face_locations) > 0 and number_of_faces_since_save > 100) or quit == True):
+        print('saving')
+
+        with open("faces_file.dat", "wb") as faces_file:
+            face_data = [known_face_encodings, known_face_metadata]
+            pickle.dump(face_data, faces_file)
+            print('Known faces saved')
+
+        number_of_faces_since_save = 0
+        return number_of_faces_since_save
+    else:
+        number_of_faces_since_save += 1
+        return number_of_faces_since_save
