@@ -27,9 +27,17 @@ def main_loop():
         face_encodings = face_recognition.face_encodings(
             rgb_small_frame, face_locations)
 
-        face_label = check_have_seen(
+        face_labels = check_have_seen(
             face_locations, face_encodings, small_frame)
 
+        draw_bbox(face_locations, face_labels, frame)
+
+        cv2.imshow('Video', frame)
+
+        # Hit 'q' on the keyboard to quit!
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            save_known_faces()
+            break
 
 
 if __name__ == "__main__":

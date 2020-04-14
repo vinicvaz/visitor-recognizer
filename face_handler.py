@@ -32,7 +32,6 @@ def lookup_known_faces(face_encoding):
     # Else, compare using euclidean distance (lower value, higher similarity)
     face_distances = face_recognition.face_distance(
         known_face_encodings, face_encoding)
-    print('face distances', face_distances)
     best_match_index = np.argmin(face_distances)
 
     # Threshold at 0.65
@@ -82,3 +81,22 @@ def check_have_seen(face_locations, face_encodings, small_frame):
             register_new_face(encoding, face_image)
 
         face_labels.append(face_label)
+    return face_labels
+
+
+def draw_bbox(face_locations, face_labels, frame):
+
+    for(top, right, bottom, left), face_label in zip(face_locations, face_labels):
+        # Return to normal size since we divided by 4
+        top *= 4
+        right *= 4
+        bottom *= 4
+        left *= 4
+
+        # Draw bbox on face
+        cv2.rectangle(frame, (left, top), (right, bottom), (0, 0, 255), 2)
+        # Draw label
+        cv2.rectangle(frame, (left, bottom - 35),
+                      (right, bottom), (0, 0, 255), cv2.FILLED)
+        cv2.putText(frame, face_label, (left + 6, bottom - 6),
+                    cv2.FONT_HERSHEY_DUPLEX, 0.8, (255, 255, 255), 1)
