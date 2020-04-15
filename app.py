@@ -7,11 +7,20 @@ app.config.update(
     SEND_FILE_MAX_AGE_DEFAULT=0
 )
 
+app.config['SECRET_KEY'] = 'secret!'
+socketio = SocketIO(app)
+
 
 @app.route('/')
-def home():
+def handle_message():
     return render_template("index.html")
 
 
+@socketio.on('event')
+def handle_event(data):
+    image = data['data']
+    print(image)
+
+
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+    socketio.run(app, debug=True)
