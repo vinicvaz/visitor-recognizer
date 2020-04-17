@@ -30,8 +30,8 @@
                     video.srcObject = stream;
                     webcamStream = stream;
                     choice = true;
-                    // schedule first one.
-                    setTimeout(processVideo, 0);
+                    handleStart();
+
                 })
                 .catch(function (err0r) {
                     console.log(err0r)
@@ -40,10 +40,26 @@
         }
     }
 
+
+    function handleStart() {
+        socket.emit('start', 1, function (data) {
+            if (data == 'loaded') {
+                console.log('Known faces loaded')
+                // schedule first one.
+                console.log('Start transmiting frames')
+                setTimeout(processVideo, 0);
+            } else {
+                console.log('Something went wrong')
+            }
+        });
+    }
+
+
     function stopWebcam() {
         video.pause();
         video.src = "";
         webcamStream.getTracks()[0].stop();
+
         choice = false;
         console.log("Video off");
     }
@@ -71,13 +87,11 @@
 
             handle_socket(frame64);
 
-            console.log('toaq')
             // schedule next one.
             let delay = 1000 / FPS - (Date.now() - begin);
             setTimeout(processVideo, delay);
         }
     }
-
 
 
     // Send data over socket
