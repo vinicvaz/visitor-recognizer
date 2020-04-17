@@ -1,11 +1,9 @@
 from flask import Flask, redirect, url_for, render_template
 from flask_socketio import SocketIO
 import base64
-from io import BytesIO
 import numpy as np
-from PIL import Image
-import io
 import cv2
+from main import main_loop
 
 app = Flask(__name__, template_folder='templates')
 
@@ -16,12 +14,12 @@ app.config.update(
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-
+# Stream route
 @app.route('/')
 def handle_message():
     return render_template("index.html")
 
-# Function to get data from socket and decode (have to add np array converter)
+# Get data from socket and decode as np.array
 @socketio.on('event')
 def handle_event(data):
 
@@ -29,8 +27,10 @@ def handle_event(data):
     data_encodded = data_splitted.encode()
     data_decoded = base64.decodebytes(data_encodded)
 
-    with open('test.jpg', 'wb') as f:
-        f.write(data_decoded)
+    img_buffer = np.frombuffer(data_decoded, np.uint8)
+
+    if len(img_buffer) > 0:
+        image = cv2.imdecode(img_buffer, cv2.COLOR_BGR2RGB)
 
 
 if __name__ == "__main__":
