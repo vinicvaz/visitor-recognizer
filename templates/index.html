@@ -1,27 +1,51 @@
 {% extends "base.html" %} {% block title %}Visitor Recognizer{% endblock %} {%
     block content%}
 <div class="container-fluid">
-
-    <video autoplay="true" class="video-element" id="videoElement"></video>
-
+    <div class="row">
+        <video autoplay="true" class="video-element" id="videoElement"></video>
+    </div>
+    <div class='row'>
+        <div class="col">
+            <button class='btn btn-success' onclick="startWebcam();">Start</button>
+            <button class='btn btn-danger' onclick="stopWebcam();">Stop</button>
+        </div>
+    </div>
 </div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
     integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script type="text/javascript">
 
+    // Basic Settings
+    const socket = io('http://localhost:5000');
+    const FPS = 20;
     const video = document.querySelector("#videoElement");
+    var webcamStream;
+    var choice;
 
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-                video.play();
+    function startWebcam() {
+        // Start Video Stream (access client webcam)
+        if (navigator.mediaDevices.getUserMedia) {
+            navigator.mediaDevices.getUserMedia({ video: true })
+                .then(function (stream) {
+                    video.srcObject = stream;
+                    webcamStream = stream;
+                    choice = true;
+                    // schedule first one.
+                    setTimeout(processVideo, 0);
+                })
+                .catch(function (err0r) {
+                    console.log(err0r)
+                    console.log("Something went wrong!");
+                });
+        }
+    }
 
-            })
-            .catch(function (err0r) {
-                console.log(err0r)
-                console.log("Something went wrong!");
-            });
+    function stopWebcam() {
+        video.pause();
+        video.src = "";
+        webcamStream.getTracks()[0].stop();
+        choice = false;
+        console.log("Video off");
     }
 
 
@@ -35,24 +59,28 @@
         return data;
     }
 
-    const socket = io('http://localhost:5000');
-    const FPS = 1;
 
+
+    // Loop that process video
     function processVideo() {
 
-        let begin = Date.now();
+        if (choice) {
+            let begin = Date.now();
 
-        frame64 = getFrame()
-        console.log(frame64)
-        handle_socket(frame64);
+            frame64 = getFrame()
 
-        // schedule next one.
-        let delay = 1000 / FPS - (Date.now() - begin);
-        setTimeout(processVideo, delay);
+            handle_socket(frame64);
+
+            console.log('toaq')
+            // schedule next one.
+            let delay = 1000 / FPS - (Date.now() - begin);
+            setTimeout(processVideo, delay);
+        }
     }
-    // schedule first one.
-    setTimeout(processVideo, 0);
 
+
+
+    // Send data over socket
     function handle_socket(data) {
         socket.emit('event', data);
     }
