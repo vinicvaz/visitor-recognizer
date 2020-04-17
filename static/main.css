@@ -2,8 +2,24 @@
     background-color: #252525;
     width: 100vw;
     height: 100vh;
+
+}
+
+.row{
+    justify-content: center;
+}
+.col{
     text-align: center;
-    position: relative;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.btn-success{
+    
+    margin-right: 20px;
+}
+.btn{
+    width: 120px;
 }
 
 .video-element{
