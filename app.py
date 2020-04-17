@@ -19,7 +19,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 
-recognizer = None
+recognizer = 0
 
 # Stream route
 @app.route('/')
@@ -29,12 +29,15 @@ def handle_message():
 # Starter socket that sends an ack to client if load faces is succefull
 @socketio.on('start')
 def handle_start(data):
-    recognizer = Recognizer(user='1')
+    global recognizer
+
+    recognizer = Recognizer(user=1)
     return 'loaded'
 
 # Get data from socket and decode as np.array
 @socketio.on('event')
 def handle_event(data):
+    global recognizer
 
     data_splitted = data.split(',')[1]
     data_encodded = data_splitted.encode()
@@ -44,6 +47,8 @@ def handle_event(data):
 
     if len(img_buffer) > 0:
         frame = cv2.imdecode(img_buffer, cv2.COLOR_BGR2RGB)
+        results = recognizer.get_results(frame)
+        print(results)
 
 
 if __name__ == "__main__":
