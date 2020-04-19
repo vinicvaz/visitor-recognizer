@@ -1,3 +1,4 @@
+/* CSS Index.html */
 .container-fluid{
     background-color: #252525;
     width: 100vw;
@@ -29,4 +30,48 @@
     background-color: #4e4646;
     border: solid #4e4646;
     border-radius: 10px;
+}
+
+
+/* CSS Home/Login Page */
+.login{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    transform: translate(-50%, -50%);
+    left: 50%;top: 50%;
+}
+
+.card{
+    background-color: #383838;
+    border: solid;
+    border-color: #383838;
+    border-radius: 15px;
+}
+
+h2, p, .form-group{
+    color: white;
+}
+
+.form-control{
+    background-color: #4e4e4e;
+    border: solid;
+    border-width: 0;
+    color: white;
+}
+
+
+.form-control::-webkit-input-placeholder {
+  color: white;
+}
+
+.form-control:focus {
+  color:white;
+  background-color: #5d5d5d;
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 255, 255, 0.1);
+}
+
+.form-control:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #4e4e4e inset;
+    -webkit-text-fill-color: white;
 }
