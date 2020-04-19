@@ -6,6 +6,9 @@ import cv2
 from Recognizer import *
 import face_handler as face_handler
 from face_handler import *
+from engineio.payload import Payload
+
+Payload.max_decode_packets = 40
 
 
 # Basic Config
@@ -21,10 +24,21 @@ socketio = SocketIO(app)
 
 recognizer = 0
 
+# Login route
+@app.route('/login')
+def home():
+    return render_template('login.html')
+
+
+@app.route('/register')
+def register():
+    return render_template('register.html')
+
 # Stream route
 @app.route('/')
 def handle_message():
     return render_template("index.html")
+
 
 # Starter socket that sends an ack to client if load faces is succefull
 @socketio.on('start')
@@ -52,4 +66,4 @@ def handle_event(data):
 
 
 if __name__ == "__main__":
-    socketio.run(app)
+    socketio.run(app, debug=True, host='0.0.0.0')
