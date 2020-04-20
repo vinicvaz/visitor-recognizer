@@ -8,8 +8,6 @@ import face_handler as face_handler
 from face_handler import *
 from engineio.payload import Payload
 
-Payload.max_decode_packets = 40
-
 
 # Basic Config
 app = Flask(__name__, template_folder='templates')
@@ -20,7 +18,7 @@ app.config['SECRET_KEY'] = 'secret!'
 
 # Socket
 socketio = SocketIO(app)
-
+Payload.max_decode_packets = 5
 
 recognizer = 0
 
@@ -63,7 +61,9 @@ def handle_event(data):
         frame = cv2.imdecode(img_buffer, cv2.COLOR_BGR2RGB)
         results = recognizer.get_results(frame)
         print(results)
+        return results
+    return 0
 
 
 if __name__ == "__main__":
-    socketio.run(app, debug=True, host='0.0.0.0')
+    socketio.run(app, debug=True)

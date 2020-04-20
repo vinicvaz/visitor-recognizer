@@ -7,29 +7,32 @@
 }
 
 .row{
-    justify-content: center;
+    justify-content: space-between;
+
 }
+
 .col{
     text-align: center;
     justify-content: space-between;
     padding-top: 10px;
+    
 }
 
 .btn-success{
-    
     margin-right: 20px;
 }
+
 .btn{
     width: 120px;
 }
 
 .video-element{
     margin-top: 10%;
-    width: 500px;
-    height: 400px;
     background-color: #4e4646;
     border: solid #4e4646;
     border-radius: 10px;
+    
+    
 }
 
 
