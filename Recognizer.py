@@ -56,13 +56,16 @@ class Recognizer:
         boxes = []
         for(top, right, bottom, left), face_label in zip(face_locations, face_labels):
             # Return to normal size since we divided by 4
-            top *= 4
-            right *= 4
-            bottom *= 4
-            left *= 4
+            top *= 4  # y2
+            right *= 4  # x2
+            bottom *= 4  # y1
+            left *= 4  # x1
+
+            #print(left, bottom, right, top)
 
             info_dict = {
-                "boxes": [top, right, bottom, left],
+                # x1, y1, x2, y2
+                "boxes": [left, top, right, bottom],
                 "label": face_label
             }
             boxes.append(info_dict)
