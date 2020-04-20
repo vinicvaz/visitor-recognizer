@@ -59,9 +59,9 @@ def handle_event(data):
 
     if len(img_buffer) > 0:
         frame = cv2.imdecode(img_buffer, cv2.COLOR_BGR2RGB)
-        results = recognizer.get_results(frame)
-        print(results)
-        return results
+        recognizer.get_results(frame)
+
+        return recognizer.results
     return 0
 
 
