@@ -14,7 +14,9 @@ class Recognizer:
         self.known_face_encodings = []
         self.known_face_metadata = []
         self.number_of_faces_since_save = 0
-        self.file = "faces_file"+str(self.user)+".dat"
+        self.file = "faces_file{}.dat".format(self.user)
+        self.save = False
+        self.results = None
 
         self.load_known_faces()
 
@@ -23,7 +25,7 @@ class Recognizer:
     def load_known_faces(self):
 
         try:
-            with open("faces_file.dat", "rb") as faces_file:
+            with open("faces_file{}.dat".format(self.user), "rb") as faces_file:
                 self.known_face_encodings, self.known_face_metadata = pickle.load(
                     faces_file)
                 print('Known faces lodaded')
@@ -49,8 +51,7 @@ class Recognizer:
         results = self.get_bbox(face_locations, face_labels, frame)
 
         self.save_faces(face_locations)
-
-        return results
+        self.results = results
 
     def get_bbox(self, face_locations, face_labels, frame):
         boxes = []
@@ -130,9 +131,11 @@ class Recognizer:
             "face_image": face_image,
         })
 
+        self.save = True
+
     def save_faces(self, face_locations, quit=False):
 
-        if((len(face_locations) > 0 and self.number_of_faces_since_save > 100) or quit == True):
+        if((len(face_locations) > 0 and self.number_of_faces_since_save > 100) or self.save == True):
             print('saving')
 
             with open(self.file, "wb") as faces_file:
@@ -140,6 +143,7 @@ class Recognizer:
                              self.known_face_metadata]
                 pickle.dump(face_data, faces_file)
                 print('Known faces saved')
+                self.save = False
 
             self.number_of_faces_since_save = 0
         else:
