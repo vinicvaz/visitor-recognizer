@@ -27,16 +27,16 @@
                 <tbody>
                     {% for i in range(0,10) %}
                     <tr>
-                        <td id='name'>
+                        <td id='name{{i}}'>
 
                         </td>
-                        <td id='time'>
+                        <td id='time{{i}}'>
 
                         </td>
-                        <td id='last-visit'>
+                        <td id='last-visit{{i}}'>
 
                         </td>
-                        <td id='seen-count'>
+                        <td id='seen-count{{i}}'>
 
                         </td>
                     </tr>
@@ -168,12 +168,17 @@
                     cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
 
                 }
-                console.log(results)
+
                 if (fps_count >= FPS && results.length > 0) {
                     // ADICIONAR NO FOR PARA TODOS RESULTADOS
-                    document.getElementById("time").innerHTML = results[0]['label'].split(" ")[1];
-                    document.getElementById("last-visit").innerHTML = results[0]['first_seen'].split(",")[0];
-                    document.getElementById("seen-count").innerHTML = results[0]['seen_count'];
+                    for (i in results) {
+                        document.getElementById(`name${i}`).innerHTML = results[i]['name'];
+                        document.getElementById(`time${i}`).innerHTML = results[i]['label'].split(" ")[1];
+                        document.getElementById(`last-visit${i}`).innerHTML = results[i]['first_seen'].split(",")[0];
+                        document.getElementById(`seen-count${i}`).innerHTML = results[i]['seen_count'];
+                    }
+
+
                     fps_count = 0;
                 }
             }
