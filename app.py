@@ -57,7 +57,7 @@ def handle_event(data):
 
     img_buffer = np.frombuffer(data_decoded, np.uint8)
 
-    if len(img_buffer) > 0:
+    if len(img_buffer) > 0 and recognizer != 0:
         frame = cv2.imdecode(img_buffer, cv2.COLOR_BGR2RGB)
         recognizer.get_results(frame)
 
