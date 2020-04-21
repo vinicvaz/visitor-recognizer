@@ -48,13 +48,13 @@ class Recognizer:
         face_labels = self.check_have_seen(
             face_locations, face_encodings, small_frame)
 
-        results = self.get_bbox(face_locations, face_labels, frame)
+        results = self.get_visitors_info(face_locations, face_labels, frame)
 
         self.save_faces(face_locations)
         self.results = results
 
-    def get_bbox(self, face_locations, face_labels, frame):
-        boxes = []
+    def get_visitors_info(self, face_locations, face_labels, frame):
+        visitors_info = []
         for(top, right, bottom, left), face_label in zip(face_locations, face_labels):
             # Return to normal size since we divided by 4
             top *= 4  # y2
@@ -62,15 +62,21 @@ class Recognizer:
             bottom *= 4  # y1
             left *= 4  # x1
 
-            #print(left, bottom, right, top)
+            for metadata in self.known_face_metadata:
+                if (datetime.now() - metadata['last_seen'] < timedelta(seconds=10)) and (metadata['seen_frames'] > 5):
+                    first_seen = metadata['first_seen'].strftime(
+                        "%m/%d/%Y, %H:%M:%S")
+                    seen_count = metadata['seen_count']
 
-            info_dict = {
-                # x1, y1, x2, y2
-                "boxes": [left, top, right, bottom],
-                "label": face_label
-            }
-            boxes.append(info_dict)
-        return boxes
+                    visitors_data = {
+                        "boxes": [left, top, right, bottom],
+                        "label": face_label,
+                        "first_seen": first_seen,
+                        "seen_count": seen_count
+                    }
+
+            visitors_info.append(visitors_data)
+        return visitors_info
 
     def check_have_seen(self, face_locations, face_encodings, small_frame):
         face_labels = []
