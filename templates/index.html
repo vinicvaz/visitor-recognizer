@@ -170,7 +170,10 @@
                 }
                 console.log(results)
                 if (fps_count >= FPS && results.length > 0) {
+                    // ADICIONAR NO FOR PARA TODOS RESULTADOS
                     document.getElementById("time").innerHTML = results[0]['label'].split(" ")[1];
+                    document.getElementById("last-visit").innerHTML = results[0]['first_seen'].split(",")[0];
+                    document.getElementById("seen-count").innerHTML = results[0]['seen_count'];
                     fps_count = 0;
                 }
             }
@@ -183,10 +186,6 @@
         }
     }
 
-    // x1 = [0] , y1 = [2], x2 = [3], y2=[1]
-    //[144, 392, 316, 220]
-    // top, right, bottom, left
-    // y2, x2, y1, x1
 
     // Send data over socket
     function handle_socket(data, dst) {
