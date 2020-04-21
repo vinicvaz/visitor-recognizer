@@ -20,6 +20,8 @@ class Recognizer:
 
         self.load_known_faces()
 
+        self.known_face_counter = len(self.known_face_metadata)
+
         print('Recognizer Started for User {}, loading faces'.format(self.user))
 
     def load_known_faces(self):
@@ -65,14 +67,15 @@ class Recognizer:
             for metadata in self.known_face_metadata:
                 if (datetime.now() - metadata['last_seen'] < timedelta(seconds=10)) and (metadata['seen_frames'] > 5):
                     first_seen = metadata['first_seen'].strftime(
-                        "%m/%d/%Y, %H:%M:%S")
+                        "%d/%m/%Y, %H:%M:%S")
                     seen_count = metadata['seen_count']
 
                     visitors_data = {
                         "boxes": [left, top, right, bottom],
                         "label": face_label,
                         "first_seen": first_seen,
-                        "seen_count": seen_count
+                        "seen_count": seen_count,
+                        "name": metadata['name']
                     }
 
             visitors_info.append(visitors_data)
@@ -129,13 +132,16 @@ class Recognizer:
         self.known_face_encodings.append(face_encoding)
 
         self.known_face_metadata.append({
+            "name": "Visitor {}".format(self.known_face_counter+1),
             "first_seen": datetime.now(),
             "first_seen_this_interaction": datetime.now(),
             "last_seen": datetime.now(),
             "seen_count": 1,
             "seen_frames": 1,
-            "face_image": face_image,
+            "face_image": face_image
+
         })
+        self.known_face_counter += 1
 
         self.save = True
 
