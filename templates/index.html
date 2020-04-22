@@ -11,6 +11,7 @@
         <div class="col col-md-6">
             <button class='btn btn-success' onclick="startWebcam();">Start</button>
             <button class='btn btn-danger' onclick="stopWebcam();">Stop</button>
+            <button class='btn btn-dark' onclick="cleanTable()">Clean Table</button>
         </div>
         <div class="col col-md-6 col-forms">
 
@@ -19,7 +20,7 @@
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Time</th>
-                        <th scope="col">Last Visit</th>
+                        <th scope="col">First Visit</th>
                         <th scope="col">Seen Count</th>
 
                     </tr>
@@ -70,8 +71,8 @@
     var dst;
     var cap;
 
-    opencvInitialized()
 
+    opencvInitialized()
     function opencvInitialized() {
         cv['onRuntimeInitialized'] = () => {
             window.src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
@@ -83,9 +84,8 @@
 
 
 
-
+    // Start Video Stream (access client webcam) and start socket trafic
     function startWebcam() {
-        // Start Video Stream (access client webcam)
         if (navigator.mediaDevices.getUserMedia) {
             navigator.mediaDevices.getUserMedia({ video: true })
                 .then(function (stream) {
@@ -146,7 +146,6 @@
 
     // Loop that process video
     function processVideo() {
-
         if (choice) {
 
             let begin = Date.now();
@@ -170,15 +169,14 @@
                 }
 
                 if (fps_count >= FPS && results.length > 0) {
-                    // ADICIONAR NO FOR PARA TODOS RESULTADOS
                     for (i in results) {
-                        document.getElementById(`name${i}`).innerHTML = results[i]['name'];
-                        document.getElementById(`time${i}`).innerHTML = results[i]['label'].split(" ")[1];
-                        document.getElementById(`last-visit${i}`).innerHTML = results[i]['first_seen'].split(",")[0];
-                        document.getElementById(`seen-count${i}`).innerHTML = results[i]['seen_count'];
+                        if (i < 10) {
+                            document.getElementById(`name${i}`).innerHTML = results[i]['name'];
+                            document.getElementById(`time${i}`).innerHTML = results[i]['label'].split(" ")[1];
+                            document.getElementById(`last-visit${i}`).innerHTML = results[i]['first_seen'].split(",")[0];
+                            document.getElementById(`seen-count${i}`).innerHTML = results[i]['seen_count'];
+                        }
                     }
-
-
                     fps_count = 0;
                 }
             }
@@ -191,6 +189,14 @@
         }
     }
 
+    function cleanTable() {
+        for (i = 0; i < 10; i++) {
+            document.getElementById(`name${i}`).innerHTML = ''
+            document.getElementById(`time${i}`).innerHTML = ''
+            document.getElementById(`last-visit${i}`).innerHTML = ''
+            document.getElementById(`seen-count${i}`).innerHTML = ''
+        }
+    }
 
     // Send data over socket
     function handle_socket(data, dst) {
