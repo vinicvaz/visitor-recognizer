@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
 
+@font-face {
+  font-family: OneDay;
+  src: url('./assets/onedayff/aqua.ttf');
+}
+
 .container-fluid{
     width: 100%;
     height: 100vh;
@@ -12,26 +17,34 @@
     justify-content: center;
 }
 .col-6{
+
     text-align: center;
     justify-content: center;
-    background-color: rgba(38,38,38,.3);
-    border: rgba(38,38,38,.3);
     border-radius: 5px;
     width: 60%;
 }
 
 .name{
     color: #bbb;  
-    font-family: 'Cinzel', serif;
+    font-family: OneDay;
     font-size: 6vw;
     padding-top: 2%;
 }
 
-.center {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30%;
-  
+.desc{
+    color: #bbb;  
+    font-family: OneDay;
+    font-size: 3vw;
+    padding-top: 2%;
+}
+
+.col-12{
+    justify-content: center;
+    text-align: center;
+    padding-top: 2%;
+}
+
+span{
+    color:#383838;
 }
 
