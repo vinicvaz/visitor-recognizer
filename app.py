@@ -105,7 +105,7 @@ def stream():
     return render_template("index.html", name=current_user.username)
 
 
-@app.route('/home')
+@app.route('/')
 def home():
     if(current_user.is_authenticated and current_user.is_active):
         return render_template("home.html", name=current_user.username)
