@@ -112,12 +112,11 @@ def home():
     else:
         return render_template("home.html", name=None)
 
-
 # Starter socket that sends an ack to client if load faces is succefull
 @socketio.on('start')
 def handle_start(data):
     global recognizer
-    recognizer = Recognizer(user=1)
+    recognizer = Recognizer(user=current_user.id)
     return 'loaded'
 
 
