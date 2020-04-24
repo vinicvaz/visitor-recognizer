@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+<link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+    {% include "navbar.html" %}
+    <div class="row">
+        <div class="col col-6">
+            <h1 class='name'>C L O S E</h1>
+        </div>
+    </div>
+    <div class='center'>
+
+    </div>
+</div>
+
+{% endblock %}
