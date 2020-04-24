@@ -1,22 +1,44 @@
 {% extends "base.html" %}
-{% block head %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% block styles %}
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+<link rel="stylesheet" href="{{ url_for('static', filename='login_register.css') }}">
+<link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css">
 
 {% endblock %}
 {% block content %}
 <div class="container-fluid">
+    <div class="row row-alert">
+        <div class="col col-4">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            {% endfor %}
+            {% endif  %}
+            {% endwith %}
+        </div>
+    </div>
     <div class="row login">
         <div class="col-md-6 m-auto">
             <div class="card card-body">
                 <h2 class="text-center">Login</h2>
-                <form>
+                <form class='form-signin' method='POST' , action='/login'>
                     <div class="form-group">
-                        <label>Username</label>
-                        <input type='text' class="form-control" name="username" />
+                        {{ form.hidden_tag() }}
+                        {{ wtf.form_field(form.username) }}
                     </div>
 
                     <div class="form-group">
-                        <label>Password</label>
-                        <input type="password" class="form-control" name="password" />
+                        {{ form.hidden_tag() }}
+                        {{ wtf.form_field(form.password) }}
                     </div>
 
                     <div class="form-group">
@@ -27,6 +49,8 @@
                     <p>
                         Don't have an account?
                         <a href='/register'>Register</a>
+                        <br />
+                        Go back <a href='home'>home</a>
                     </p>
                 </form>
             </div>

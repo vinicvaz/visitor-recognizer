@@ -1,9 +1,12 @@
-{% extends "base.html" %} {% block title %}Visitor Recognizer{% endblock %} {%
+{% extends "base.html" %}
+
+{% block title %}Visitor Recognizer{% endblock %} {%
     block content%}
+
+
 <div class="container-fluid">
-
+    {% include "navbar.html" %}
     <div class="row">
-
         <video autoplay="true" class="video-element" id="videoElement" width="500" height="400"></video>
         <canvas id='canvasOutput'></canvas>
     </div>
@@ -50,164 +53,10 @@
     </div>
 </div>
 
-
-
 <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"
     integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
 <script src="static/js/opencv.js" type="text/javascript"></script>
-<script type="text/javascript">
-
-
-    // Basic Settings
-    const socket = io('http://localhost:5000');
-    const FPS = 10;
-    const video = document.querySelector("#videoElement");
-    var webcamStream;
-    var choice;
-    var results;
-
-    var fps_count = 0
-    var src;
-    var dst;
-    var cap;
-
-
-    opencvInitialized()
-    function opencvInitialized() {
-        cv['onRuntimeInitialized'] = () => {
-            window.src = new cv.Mat(video.height, video.width, cv.CV_8UC4);
-            window.dst = new cv.Mat(video.height, video.width, cv.CV_8UC1);
-            window.cap = new cv.VideoCapture(video);
-            console.log('OpenCV loaded.')
-        };
-    }
-
-
-
-    // Start Video Stream (access client webcam) and start socket trafic
-    function startWebcam() {
-        if (navigator.mediaDevices.getUserMedia) {
-            navigator.mediaDevices.getUserMedia({ video: true })
-                .then(function (stream) {
-                    video.srcObject = stream;
-                    webcamStream = stream;
-                    choice = true;
-
-                    handleStart();
-
-                })
-                .catch(function (err0r) {
-                    console.log(err0r)
-                    console.log("Something went wrong!");
-                    src.delete();
-                    dst.delete();
-                });
-        }
-    }
-
-    function handleStart() {
-        socket.emit('start', 1, function (data) {
-            if (data == 'loaded') {
-                console.log('Known faces loaded')
-                // schedule first one.
-                console.log('Start transmiting frames')
-                setTimeout(processVideo, 0);
-            } else {
-                console.log('Something went wrong')
-            }
-        });
-    }
-
-
-    function stopWebcam() {
-        // clean and stop.
-        video.pause();
-        video.src = "";
-        webcamStream.getTracks()[0].stop();
-        const canvas = document.getElementById('canvasOutput')
-        canvas.height = video.height;
-        canvas.width = video.width;
-        canvas.getContext('2d').drawImage(video, 0, 0)
-        choice = false;
-        console.log("Video off");
-    }
-
-
-    // returns a frame encoded in base64
-    const getFrame = () => {
-        const canvas = document.createElement('canvas');
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        canvas.getContext('2d').drawImage(video, 0, 0);
-        const data = canvas.toDataURL('image/jpeg');
-        return data;
-    }
-
-
-    // Loop that process video
-    function processVideo() {
-        if (choice) {
-
-            let begin = Date.now();
-            cap.read(src);
-            src.copyTo(dst);
-
-            frame64 = getFrame()
-            handle_socket(frame64);
-
-            if (results) {
-                for (let i = 0; i < results.length; ++i) {
-                    x1 = results[i].boxes[0] - 55
-                    y1 = results[i].boxes[1] - 55
-                    x2 = results[i].boxes[2] - 55
-                    y2 = results[i].boxes[3] - 55
-
-                    let point1 = new cv.Point(x1, y1);
-                    let point2 = new cv.Point(x2, y2);
-                    cv.rectangle(dst, point1, point2, [255, 0, 0, 255]);
-
-                }
-
-                if (fps_count >= FPS && results.length > 0) {
-                    for (i in results) {
-                        if (i < 10) {
-                            document.getElementById(`name${i}`).innerHTML = results[i]['name'];
-                            document.getElementById(`time${i}`).innerHTML = results[i]['label'].split(" ")[1];
-                            document.getElementById(`last-visit${i}`).innerHTML = results[i]['first_seen'].split(",")[0];
-                            document.getElementById(`seen-count${i}`).innerHTML = results[i]['seen_count'];
-                        }
-                    }
-                    fps_count = 0;
-                }
-            }
-
-            cv.imshow('canvasOutput', dst);
-            // schedule next one.
-            let delay = 1000 / FPS - (Date.now() - begin);
-            fps_count = fps_count + 1;
-            setTimeout(processVideo, delay);
-        }
-    }
-
-    function cleanTable() {
-        for (i = 0; i < 10; i++) {
-            document.getElementById(`name${i}`).innerHTML = ''
-            document.getElementById(`time${i}`).innerHTML = ''
-            document.getElementById(`last-visit${i}`).innerHTML = ''
-            document.getElementById(`seen-count${i}`).innerHTML = ''
-        }
-    }
-
-    // Send data over socket
-    function handle_socket(data, dst) {
-        socket.emit('event', data, function (res) {
-            if (res !== 0) {
-                results = res;
-            }
-        });
-    }
-
-</script>
+<script src="static/js/stream.js" type="text/javascript"></script>
 
 
 
