@@ -12,7 +12,6 @@ from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
-from flask_fontawesome import FontAwesome
 
 ## Basic Configuration ##
 app = Flask(__name__, template_folder='templates')
