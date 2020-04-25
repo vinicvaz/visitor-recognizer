@@ -1,0 +1,12 @@
+wheel
+numpy
+Flask
+pybase64
+opencv-python
+face-recognition
+Flask-Bootstrap
+Flask-SQLAlchemy
+Flask-Login
+Flask-WTF
+Flask-SocketIO
+email-validator
