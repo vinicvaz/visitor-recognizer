@@ -1,5 +1,9 @@
-# CLOSE
-Web app with facial recognition running on a client-server architeture.t
+<p align="center">
+  <img width="300" src="https://i.imgur.com/mnjSnZg.png">
+  <p align="center"><strong>Web app with facial recognition running on a client-server architeture</strong> </p>
+  
+</p>
+
 
 ## Description
 The app will provide to the user the possibility of using a web facial recognition and customer control system. Just perform a registration and login and you can use the application for various purposes, such as security, personalized customer service, among others.
@@ -27,7 +31,6 @@ pip install -r requirements.txt
    <img  width="780" src="https://i.imgur.com/4FCG1Rd.png">
   <img  width="780" src="https://i.imgur.com/9vxH6hM.png">
   <img width="780" src="https://i.imgur.com/VavfkdM.png">
-
 </p>
 
 
