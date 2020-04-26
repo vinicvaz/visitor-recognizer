@@ -34,7 +34,7 @@ pip install -r requirements.txt
 </p>
 
 
-<h2 align="center" styles="font-size:bold">Watch a video demo (audio in portugues for while)</h2>
+<h2 align="center" styles="font-size:bold">Watch a video demo (audio in portuguese for while)</h2>
 
 [![Watch the video](https://i.imgur.com/NLit6Zj.png)](
 https://www.youtube.com/watch?v=hsFuOOqj3WQ&feature=youtu.be)
