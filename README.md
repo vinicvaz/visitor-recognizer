@@ -34,11 +34,6 @@ pip install -r requirements.txt
 </p>
 
 
-<h2 align="center" styles="font-size:bold">Watch a video demo (audio in portuguese for while)</h2>
-
-[![Watch the video](https://i.imgur.com/NLit6Zj.png)](
-https://www.youtube.com/watch?v=hsFuOOqj3WQ&feature=youtu.be)
-
 
 ## License
 [APACHE](https://github.com/vinicvaz/visitor-recognizer/blob/dev/LICENSE.md)
